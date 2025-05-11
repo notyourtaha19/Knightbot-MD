@@ -1,186 +1,69 @@
-const settings = require('../settings');
 const fs = require('fs');
 const path = require('path');
 
-async function helpCommand(sock, chatId, channelLink) {
-    const helpMessage = `
-╔═══════════════════╗
-   *🤖 ${settings.botName || 'KnightBot-MD'}*  
-   Version: *${settings.version || '1.0.0'}*
-   by ${settings.botOwner || 'Mr Unique Hacker'}
-   YT : ${global.ytch}
-╚═══════════════════╝
+async function helpCommand(sock, chatId) {
+    const helpMessage = `> ≻───── ⋆✩⋆ ─────≺
+  𝗠𝗔𝗛𝗜𝗥𝗨 𝗕𝗢𝗧 v2.0.0
+👑 𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥: T A H A
+> ≻───── ⋆✩⋆ ─────≺
 
-*Available Commands:*
+✨ 𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 𝗠𝗮𝗵𝗶𝗿𝘂 𝗕𝗼𝘁 — 𝘆𝗼𝘂𝗿 𝗮𝗻𝗶𝗺𝗲-𝘁𝗵𝗲𝗺𝗲𝗱 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 𝗮𝘀𝘀𝗶𝘀𝘁𝗮𝗻𝘁!
 
-╔═══════════════════╗
-🌐 *General Commands*:
-║ ➤ .help or .menu
-║ ➤ .ping
-║ ➤ .alive
-║ ➤ .tts <text>
-║ ➤ .owner
-║ ➤ .joke
-║ ➤ .quote
-║ ➤ .fact
-║ ➤ .weather <city>
-║ ➤ .news
-║ ➤ .attp <text>
-║ ➤ .lyrics <song_title>
-║ ➤ .8ball <question>
-║ ➤ .groupinfo
-║ ➤ .staff or .admins 
-║ ➤ .vv
-║ ➤ .pair or .rent
-║ ➤ .trt <text> <lang>
-║ ➤ .ss <link>
-╚═══════════════════╝ 
+≻───『 𝗚𝗘𝗡𝗘𝗥𝗔𝗟 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 』───≺  
+> .help  .ping  .alive  .tts  .owner  .joke  .quote  .fact  .weather  .news  .attp  .lyrics  .8ball  .groupinfo  .staff  .vv  .pair  .trt  .ss <
 
-╔═══════════════════╗
-👮‍♂️ *Admin Commands*:
-║ ➤ .ban @user
-║ ➤ .promote @user
-║ ➤ .demote @user
-║ ➤ .mute <minutes>
-║ ➤ .unmute
-║ ➤ .delete or .del
-║ ➤ .kick @user
-║ ➤ .warnings @user
-║ ➤ .warn @user
-║ ➤ .antilink
-║ ➤ .antibadword
-║ ➤ .clear
-║ ➤ .tag <message>
-║ ➤ .tagall
-║ ➤ .chatbot
-║ ➤ .resetlink
-╚═══════════════════╝
+≻───『 𝗔𝗗𝗠𝗜𝗡 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 』───≺  
+> .ban  .unban  .promote  .demote  .kick  .mute  .unmute  .warn  .warnings  .tag  .tagall  .chatbot  .delete  .del  .antilink  .antibadword  .resetlink  .clear <
 
-╔═══════════════════╗
-🔒 *Owner Commands*:
-║ ➤ .mode
-║ ➤ .autostatus
-║ ➤ .clearsession
-║ ➤ .antidelete
-║ ➤ .cleartmp
-║ ➤ .setpp <reply to image>
-║ ➤ .autoreact
-╚═══════════════════╝
+≻───『 𝗢𝗪𝗡𝗘𝗥 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 』───≺  
+> .mode  .autostatus  .clearsession  .antidelete  .cleartmp  .setpp  .autoreact <
 
-╔═══════════════════╗
-🎨 *Image/Sticker Commands*:
-║ ➤ .blur <image>
-║ ➤ .simage <reply to sticker>
-║ ➤ .sticker <reply to image>
-║ ➤ .tgsticker <Link>
-║ ➤ .meme
-║ ➤ .take <packname> 
-║ ➤ .emojimix <emj1>+<emj2>
-╚═══════════════════╝  
+≻───『 𝗦𝗧𝗜𝗖𝗞𝗘𝗥 & 𝗜𝗠𝗔𝗚𝗘 』───≺  
+> .sticker  .simage  .blur  .meme  .emojimix  .take  .tgsticker <
 
-╔═══════════════════╗
-🎮 *Game Commands*:
-║ ➤ .tictactoe @user
-║ ➤ .hangman
-║ ➤ .guess <letter>
-║ ➤ .trivia
-║ ➤ .answer <answer>
-║ ➤ .truth
-║ ➤ .dare
-╚═══════════════════╝
+≻───『 𝗙𝗨𝗡 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 』───≺  
+> .flirt  .compliment  .insult  .character  .wasted  .simp  .stupid  .ship  .truth  .dare <
 
-╔═══════════════════╗
-🤖 *AI Commands*:
-║ ➤ .gpt <question>
-║ ➤ .gemini <question>
-╚═══════════════════╝
+≻───『 𝗚𝗔𝗠𝗘𝗦 』───≺  
+> .tictactoe  .hangman  .guess  .trivia  .answer <
 
-╔═══════════════════╗
-🎯 *Fun Commands*:
-║ ➤ .compliment @user
-║ ➤ .insult @user
-║ ➤ .flirt 
-║ ➤ .character @user
-║ ➤ .wasted @user
-║ ➤ .ship @user
-║ ➤ .simp @user
-║ ➤ .stupid @user [text]
-╚═══════════════════╝
+≻───『 𝗔𝗜 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦 』───≺  
+> .gpt  .gemini <
 
-╔═══════════════════╗
-🔤 *Textmaker*:
-║ ➤ .metallic <text>
-║ ➤ .ice <text>
-║ ➤ .snow <text>
-║ ➤ .impressive <text>
-║ ➤ .matrix <text>
-║ ➤ .light <text>
-║ ➤ .neon <text>
-║ ➤ .devil <text>
-║ ➤ .purple <text>
-║ ➤ .thunder <text>
-║ ➤ .leaves <text>
-║ ➤ .1917 <text>
-║ ➤ .arena <text>
-║ ➤ .hacker <text>
-║ ➤ .sand <text>
-║ ➤ .blackpink <text>
-║ ➤ .glitch <text>
-║ ➤ .fire <text>
-╚═══════════════════╝
+≻───『 𝗧𝗘𝗫𝗧𝗠𝗔𝗞𝗘𝗥 』───≺  
+> .metallic  .ice  .snow  .impressive  .matrix  .light  .neon  .devil  .purple  .thunder  .leaves  .1917  .arena  .hacker  .sand  .blackpink  .glitch  .fire <
 
-╔═══════════════════╗
-📥 *Downloader*:
-║ ➤ .play <song_name>
-║ ➤ .song <song_name>
-║ ➤ .instagram <link>
-║ ➤ .facebook <link>
-║ ➤ .tiktok <link>
-╚═══════════════════╝
+≻───『 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗥 』───≺  
+> .play  .song  .instagram  .facebook  .tiktok <
 
-╔═══════════════════╗
-💻 *Github Commands:*
-║ ➤ .git
-║ ➤ .github
-║ ➤ .sc
-║ ➤ .script
-║ ➤ .repo
-╚═══════════════════╝
+≻───『 𝗚𝗜𝗧𝗛𝗨𝗕 & 𝗦𝗖𝗥𝗜𝗣𝗧 』───≺  
+> .git  .github  .sc  .script  .repo <
 
-Join our channel for updates:`;
+≻───『 𝗦𝗨𝗣𝗣𝗢𝗥𝗧 & 𝗖𝗢𝗡𝗧𝗔𝗖𝗧 』───≺  
+💬 *Need help or suggestions?*  
+Contact the bot owner directly for assistance:  
+👑 *BOT OWNER: 𓆩ᴛ ᴀ ʜ ᴀ𓆪*
+
+✨ Thank you for using *Mahiru Bot*!  
+⚡ Stay awesome, stay automated! ⚡`;
 
     try {
-        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-        
-        if (fs.existsSync(imagePath)) {
-            const imageBuffer = fs.readFileSync(imagePath);
-            
+        const videoPath = path.join(__dirname, '../assets/Mahiru_help.mp4');
+
+        if (fs.existsSync(videoPath)) {
+            const videoBuffer = fs.readFileSync(videoPath);
             await sock.sendMessage(chatId, {
-                image: imageBuffer,
+                video: videoBuffer,
                 caption: helpMessage,
+                gifPlayback: true,
                 contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD by Mr Unique Hacker',
-                        serverMessageId: -1
-                    }
+                    forwardingScore: 999,
+                    isForwarded: true
                 }
             });
         } else {
-            console.error('Bot image not found at:', imagePath);
-            await sock.sendMessage(chatId, { 
-                text: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD by Mr Unique Hacker',
-                        serverMessageId: -1
-                    } 
-                }
+            await sock.sendMessage(chatId, {
+                text: helpMessage
             });
         }
     } catch (error) {
